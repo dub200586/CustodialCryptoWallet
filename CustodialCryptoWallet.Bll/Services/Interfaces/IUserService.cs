@@ -7,7 +7,7 @@ namespace CustodialCryptoWallet.Bll.Services.Interfaces
     {
         Task<UserModel> CreateUserAsync(UserModel user);
         Task<UserModel> GetUserByIdAsync(Guid userId);
-        Task<UserDataModel> DepositMoneyToCurrencyAccountAsync(Guid userId, decimal amount);
-        Task<UserDataModel> WithdrawMoneyFromCurrencyAccountAsync(Guid userId, decimal amount);
+        Task<UserModel> DepositMoneyToCurrencyAccountAsync(Guid userId, decimal amount);
+        Task<UserModel> WithdrawMoneyFromCurrencyAccountAsync(Guid userId, decimal amount);
     }
 }

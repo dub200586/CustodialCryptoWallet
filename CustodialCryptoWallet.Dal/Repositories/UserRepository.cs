@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using CustodialCryptoWallet.Dal.DataModels;
 using CustodialCryptoWallet.Dal.Models;
 using CustodialCryptoWallet.Dal.Repositories.Interfaces;
@@ -19,7 +20,7 @@ namespace CustodialCryptoWallet.Dal.Repositories
 
         public async Task<UserDataModel> GetUserByIdAsync(Guid userId)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(x => x.UserId == userId);
+            var user = await _context.Users.AsNoTracking().FirstOrDefaultAsync(x => x.UserId == userId);
             var userDataModel = _mapper.Map<UserDataModel>(user);
 
             return userDataModel;
@@ -37,7 +38,7 @@ namespace CustodialCryptoWallet.Dal.Repositories
         {
             var user = _mapper.Map<User>(userDataModel);
             var createdUser = await _context.Users.AddAsync(user);
-            var createdUserDataModel = _mapper.Map<UserDataModel>(createdUser);
+            var createdUserDataModel = _mapper.Map<UserDataModel>(createdUser.Entity);
 
             return createdUserDataModel;
         }

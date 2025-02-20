@@ -8,6 +8,10 @@ namespace CustodialCryptoWallet.Bll.Services
 {
     public class UserService : IUserService
     {
+        private const string ExistingUserMessage = "User with this email already exists";
+        private const string NonExistingUserMessage = "Such user does not exist";
+        private const string InsufficientFundsMessage = "Insufficient funds";
+
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IUserRepository _userRepository;
@@ -23,7 +27,7 @@ namespace CustodialCryptoWallet.Bll.Services
         {
             var existUser = await _userRepository.GetUserByEmailAsync(user.Email);
 
-            if (existUser != null) throw new Exception("User with this email already exists");
+            if (existUser != null) throw new Exception(ExistingUserMessage);
 
             var userDataModel = _mapper.Map<UserDataModel>(user);
             var createdUser = await _userRepository.CreateUserAsync(userDataModel);
@@ -37,14 +41,14 @@ namespace CustodialCryptoWallet.Bll.Services
         {
             var userDataModel = await _userRepository.GetUserByIdAsync(userId);
 
-            if (userDataModel == null) throw new Exception("Such user does not exist");
+            if (userDataModel == null) throw new Exception(NonExistingUserMessage);
 
             var userModel = _mapper.Map<UserModel>(userDataModel);
 
             return userModel;
         }
 
-        public async Task<UserDataModel> DepositMoneyToCurrencyAccountAsync(Guid userId, decimal amount)
+        public async Task<UserModel> DepositMoneyToCurrencyAccountAsync(Guid userId, decimal amount)
         {
             var transaction = _unitOfWork.BeginTransaction();
 
@@ -56,7 +60,9 @@ namespace CustodialCryptoWallet.Bll.Services
                 await _unitOfWork.SaveAsync();
 
                 await transaction.CommitAsync();
-                return userDataModel;
+                var userModel = _mapper.Map<UserModel>(userDataModel);
+
+                return userModel;
             }
             catch
             {
@@ -65,7 +71,7 @@ namespace CustodialCryptoWallet.Bll.Services
             }
         }
 
-        public async Task<UserDataModel> WithdrawMoneyFromCurrencyAccountAsync(Guid userId, decimal amount)
+        public async Task<UserModel> WithdrawMoneyFromCurrencyAccountAsync(Guid userId, decimal amount)
         {
             var transaction = _unitOfWork.BeginTransaction();
 
@@ -73,14 +79,16 @@ namespace CustodialCryptoWallet.Bll.Services
             {
                 var userDataModel = await _userRepository.GetUserByIdAsync(userId);
 
-                if (userDataModel.Balance < amount) throw new Exception("Insufficient funds");
+                if (userDataModel.Balance < amount) throw new Exception(InsufficientFundsMessage);
 
                 userDataModel.Balance -= amount;
                 await _userRepository.UpdateUserAsync(userDataModel);
                 await _unitOfWork.SaveAsync();
 
                 await transaction.CommitAsync();
-                return userDataModel;
+                var userModel = _mapper.Map<UserModel>(userDataModel);
+
+                return userModel;
             }
             catch
             {
