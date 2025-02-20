@@ -6,6 +6,7 @@ builder.Services.InitDbContext(builder.Configuration, builder.Environment);
 builder.Services.InitRepositories();
 builder.Services.InitServices();
 builder.Services.InitMapper();
+builder.Services.InitModelValidation();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

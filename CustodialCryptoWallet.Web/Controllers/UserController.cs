@@ -40,18 +40,18 @@ namespace CustodialCryptoWallet.Web.Controllers
         }
 
         [HttpPost, Route("{userId}/deposit")]
-        public async Task<IActionResult> DepositMoneyToCurrencyAccountAsync(Guid userId, decimal amount)
+        public async Task<IActionResult> DepositMoneyToCurrencyAccountAsync(Guid userId, AmountDto amount)
         {
-            var updatedBalance = await _userService.DepositMoneyToCurrencyAccountAsync(userId, amount);
+            var updatedBalance = await _userService.DepositMoneyToCurrencyAccountAsync(userId, amount.Amount);
             var updatedBalanceViewModel = _mapper.Map<NewBalanceViewModel>(updatedBalance);
 
             return Ok(updatedBalanceViewModel);
         }
 
         [HttpPost, Route("{userId}/withdraw")]
-        public async Task<IActionResult> WithdrawMoneyFromCurrencyAccountAsync(Guid userId, decimal amount)
+        public async Task<IActionResult> WithdrawMoneyFromCurrencyAccountAsync(Guid userId, AmountDto amount)
         {
-            var updatedBalance = await _userService.WithdrawMoneyFromCurrencyAccountAsync(userId, amount);
+            var updatedBalance = await _userService.WithdrawMoneyFromCurrencyAccountAsync(userId, amount.Amount);
             var updatedBalanceViewModel = _mapper.Map<NewBalanceViewModel>(updatedBalance);
 
             return Ok(updatedBalanceViewModel);
