@@ -8,14 +8,18 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="14.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Abstractions" Version="2.3.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Infrastruture\Configurations\" />
-    <Folder Include="Models\Dto\" />
     <Folder Include="Models\Validators\" />
-    <Folder Include="Models\ViewModels\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CustodialCryptoWallet.Bll\CustodialCryptoWallet.Bll.csproj" />
+    <ProjectReference Include="..\CustodialCryptoWallet.Common\CustodialCryptoWallet.Common.csproj" />
   </ItemGroup>
 
 </Project>

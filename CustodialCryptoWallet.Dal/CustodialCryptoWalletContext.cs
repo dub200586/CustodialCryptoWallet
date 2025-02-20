@@ -13,6 +13,5 @@ namespace CustodialCryptoWallet.Dal
         }
 
         public DbSet<User> Users { get; set; }
-        public DbSet<CurrencyAccount> CurrencyAccounts { get; set; }
     }
 }
